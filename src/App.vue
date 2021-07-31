@@ -3,7 +3,8 @@
     <img src="./assets/logo.png" alt="Logo" class="header__img" />
 
     <div class="header__icon" v-if="mobileView" @click="isOpen = !isOpen">
-      <i class="fas fa-bars"></i>
+      <i class="fas fa-bars" v-if="!isOpen"></i>
+      <i class="fas fa-times" v-if="isOpen"></i>
     </div>
 
     <div class="header__menu" v-if="isOpen">
@@ -84,7 +85,7 @@ export default {
         if (!res.ok) throw new Error(`${this.errMessage} (${res.status})`);
         const data = await res.json();
         this.movies = data.results.map(this.generateMovie);
-        console.log(data);
+        // console.log(data);
         // console.log(this.movies);
       } catch (err) {
         console.log(err.message);
@@ -115,11 +116,6 @@ export default {
   justify-content: space-between;
   align-items: center;
   z-index: 10;
-
-  // @include respond(phone) {
-  //   padding: 2rem 3rem;
-  //   margin-bottom: 5rem;
-  // }
 
   &__img {
     height: 2rem;
@@ -188,7 +184,7 @@ h1 {
 
   @include respond(phone) {
     text-align: center;
-    margin: 2rem;
+    margin: 3rem;
   }
 }
 </style>
