@@ -1,19 +1,37 @@
 <template>
   <header class="header">
     <img src="./assets/logo.png" alt="Logo" class="header__img" />
-    <Nav @btn-click="sortMovies" />
+
+    <div class="header__icon" v-if="mobileView" @click="isOpen = !isOpen">
+      <i class="fas fa-bars"></i>
+    </div>
+
+    <div class="header__menu" v-if="isOpen">
+      <Nav @btn-click="sortMovies" />
+      <input
+        class="search search--mobile"
+        type="text"
+        placeholder="Search"
+        v-model="search"
+        @keyup.enter="sortMovies('search/movie?query=' + search)"
+      />
+    </div>
+
+    <Nav @btn-click="sortMovies" v-if="!mobileView" />
     <input
       class="search"
       type="text"
       placeholder="Search"
       v-model="search"
       @keyup.enter="sortMovies('search/movie?query=' + search)"
+      v-if="!mobileView"
     />
   </header>
 
   <div class="container">
-    <h1>{{ title }}</h1>
+    <h1 v-if="movies.length !== 0">{{ title }}</h1>
     <div class="movies">
+      <h1 v-if="movies.length === 0">{{ errMessage }}</h1>
       <Movie :movies="movies" />
     </div>
   </div>
@@ -29,16 +47,23 @@ export default {
   components: { Nav, Movie },
   data() {
     return {
+      mobileView: true,
+      isOpen: false,
       search: '',
       title: '',
       restUrl: '',
-      movies: []
+      movies: [],
+      errMessage: 'There are no results that match your search'
     };
   },
   created() {
+    this.handleView();
     this.sortMovies('movie/popular?');
   },
   methods: {
+    handleView() {
+      this.mobileView = window.innerWidth <= 800;
+    },
     sortMovies(url, id = '') {
       this.restUrl = url;
       if (url.includes('popular')) this.title = 'Most Popular Movies';
@@ -59,7 +84,7 @@ export default {
         if (!res.ok) throw new Error(`${this.errMessage} (${res.status})`);
         const data = await res.json();
         this.movies = data.results.map(this.generateMovie);
-        // console.log(data.results);
+        console.log(data);
         // console.log(this.movies);
       } catch (err) {
         console.log(err.message);
@@ -81,15 +106,48 @@ export default {
 
 <style lang="scss">
 .header {
+  position: relative;
   margin-bottom: 10rem;
   padding: 0 3rem;
+  height: 6rem;
   background: darken($color-dark-one, 5%);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 10;
+
+  // @include respond(phone) {
+  //   padding: 2rem 3rem;
+  //   margin-bottom: 5rem;
+  // }
 
   &__img {
     height: 2rem;
+  }
+
+  &__icon {
+    font-size: 2rem;
+  }
+
+  &__menu {
+    position: absolute;
+    top: 6rem;
+    left: 0;
+    width: 100%;
+    padding: 3rem;
+    background: darken($color-dark-one, 5%);
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      margin-bottom: 3rem;
+
+      &__btn,
+      &__menu {
+        width: 100%;
+      }
+    }
   }
 }
 
@@ -108,6 +166,10 @@ export default {
   font-family: inherit;
   font-size: 1.4rem;
 
+  &--mobile {
+    width: 100%;
+  }
+
   &:focus {
     background: $color-dark-one;
     outline: none;
@@ -115,6 +177,18 @@ export default {
 
   &::placeholder {
     color: $color-green;
+  }
+}
+
+h1 {
+  margin-left: 2rem;
+  margin-bottom: 5rem;
+  font-size: 3rem;
+  letter-spacing: 1.5px;
+
+  @include respond(phone) {
+    text-align: center;
+    margin: 2rem;
   }
 }
 </style>

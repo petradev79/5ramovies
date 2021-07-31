@@ -1,7 +1,14 @@
 <template>
   <div v-for="movie in movies" :key="movie.id">
     <div class="movie">
-      <img :src="imgPath + movie.img" :alt="movie.title" />
+      <img
+        :src="
+          movie.img
+            ? imgPath + movie.img
+            : 'http://via.placeholder.com/1080x1620'
+        "
+        :alt="movie.title"
+      />
       <div class="movie__info">
         <h2 class="movie__title" v-if="movie.title.length > 20">
           {{ movie.title.substring(0, 20) + '...' }}

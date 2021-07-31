@@ -65,8 +65,8 @@ export default {
 .nav {
   &__btn {
     position: relative;
-    padding: 2rem 0rem;
     width: 15rem;
+    height: 6rem;
     font-size: 1.1rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -93,7 +93,7 @@ export default {
     z-index: 1;
 
     & .nav__btn {
-      padding: 1rem 0rem;
+      height: 3.5rem;
     }
   }
 }
