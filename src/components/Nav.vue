@@ -1,6 +1,8 @@
 <template>
   <nav class="nav">
-    <button class="nav__btn" @click="onClick('movie/popular?')">popular</button>
+    <button class="nav__btn" @click="onClick('movie/popular?')">
+      popular
+    </button>
     <button class="nav__btn" @click="onClick('movie/top_rated?')">
       top rated
     </button>

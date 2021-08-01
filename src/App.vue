@@ -30,7 +30,7 @@
   </header>
 
   <div class="container">
-    <h1 v-if="movies.length !== 0">{{ title }}</h1>
+    <h1 @click="test" v-if="movies.length !== 0">{{ title }}</h1>
     <div class="movies">
       <h1 v-if="movies.length === 0">{{ errMessage }}</h1>
       <Movie :movies="movies" />
@@ -48,7 +48,7 @@ export default {
   components: { Nav, Movie },
   data() {
     return {
-      mobileView: true,
+      mobileView: false,
       isOpen: false,
       search: '',
       title: '',
@@ -62,6 +62,13 @@ export default {
     this.sortMovies('movie/popular?');
   },
   methods: {
+    ////////////////// START TEST /////////////////
+    test() {
+      console.log(this.restUrl);
+      this.sortMovies(this.restUrl + '&page=2');
+      this.title = this.title;
+    },
+    ////////////////// END TEST /////////////////
     handleView() {
       this.mobileView = window.innerWidth <= 800;
     },
@@ -96,7 +103,7 @@ export default {
       const title = movie.title;
       const img = movie.poster_path;
       const rating = movie.vote_average;
-      const date = movie.release_date.split('-')[0];
+      const date = movie.release_date?.split('-')[0];
       const overview = movie.overview;
 
       return { id, title, img, rating, date, overview };
