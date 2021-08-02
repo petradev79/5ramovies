@@ -85,6 +85,7 @@ export default {
     &:hover {
       background: $color-dark-two;
       color: $color-white;
+      border: none;
     }
 
     i {
