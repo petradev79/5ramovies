@@ -8,7 +8,7 @@
     </div>
 
     <div class="header__menu" v-if="isOpen">
-      <Nav @btn-click="sortMovies" />
+      <NavPhone @btn-click="sortMovies" />
       <input
         class="search search--mobile"
         type="text"
@@ -35,22 +35,28 @@
       <h1 v-if="movies.length === 0">{{ errMessage }}</h1>
       <Movie :movies="movies" />
     </div>
+    <p class="copyright">
+      <span>Designed and Developed by Ivan Petrović.</span> Copyright &copy;
+      2021 5ramovies. All rights reserved.
+    </p>
   </div>
 </template>
 
 <script>
 import { API_KEY, BASE_URL } from './config.js';
 import Nav from './components/Nav.vue';
+import NavPhone from './components/Nav-phone.vue';
 import Movie from './components/Movie.vue';
 
 export default {
   name: 'App',
-  components: { Nav, Movie },
+  components: { Nav, NavPhone, Movie },
   data() {
     return {
       mobileView: false,
       isOpen: false,
       search: '',
+      titleParam: '',
       title: '',
       restUrl: '',
       movies: [],
@@ -65,8 +71,8 @@ export default {
     ////////////////// START TEST /////////////////
     test() {
       console.log(this.restUrl);
-      this.sortMovies(this.restUrl + '&page=2');
-      this.title = this.title;
+
+      this.sortMovies(this.restUrl + '&page=2', this.titleParam);
     },
     ////////////////// END TEST /////////////////
     handleView() {
@@ -74,6 +80,7 @@ export default {
     },
     sortMovies(url, id = '') {
       this.restUrl = url;
+      this.titleParam = id;
       if (url.includes('popular')) this.title = 'Most Popular Movies';
       if (url.includes('top')) this.title = 'Top Rated Movies';
       if (url.includes('year')) this.title = `Movies Release ${id}`;
@@ -114,10 +121,11 @@ export default {
 
 <style lang="scss">
 .header {
-  position: relative;
-  margin-bottom: 10rem;
+  position: fixed;
+  top: 0;
   padding: 0 3rem;
   height: 6rem;
+  width: 100%;
   background: darken($color-dark-one, 5%);
   display: flex;
   justify-content: space-between;
@@ -137,20 +145,9 @@ export default {
     top: 6rem;
     left: 0;
     width: 100%;
+    height: 100vh;
     padding: 3rem;
     background: darken($color-dark-one, 5%);
-
-    .nav {
-      display: flex;
-      flex-direction: column;
-      text-align: center;
-      margin-bottom: 3rem;
-
-      &__btn,
-      &__menu {
-        width: 100%;
-      }
-    }
   }
 }
 
@@ -184,14 +181,26 @@ export default {
 }
 
 h1 {
-  margin-left: 2rem;
-  margin-bottom: 5rem;
+  margin: 10rem 2rem 5rem;
   font-size: 3rem;
   letter-spacing: 1.5px;
 
   @include respond(phone) {
     text-align: center;
-    margin: 3rem;
+  }
+}
+
+.copyright {
+  margin: 2rem;
+  text-align: center;
+  font-size: 1.2rem;
+  line-height: 2rem;
+  color: darken($color-white, 20%);
+
+  @include respond(phone) {
+    span {
+      display: block;
+    }
   }
 }
 </style>

@@ -10,35 +10,31 @@
 
     <button class="nav__btn" @click="genres.isOpen = !genres.isOpen">
       genres <i class="fas fa-caret-down"></i>
-      <div class="nav__menu" v-if="genres.isOpen">
-        <div v-for="genre in genres.results" :key="genre.id">
-          <button
-            class="nav__btn"
-            @click="
-              onClick('discover/movie?with_genres=' + genre.id, genre.name)
-            "
-          >
-            {{ genre.name }}
-          </button>
-        </div>
-      </div>
     </button>
+    <div class="nav__menu" v-if="genres.isOpen">
+      <div v-for="genre in genres.results" :key="genre.id">
+        <button
+          class="nav__btn"
+          @click="onClick('discover/movie?with_genres=' + genre.id, genre.name)"
+        >
+          {{ genre.name }}
+        </button>
+      </div>
+    </div>
 
     <button class="nav__btn" @click="years.isOpen = !years.isOpen">
       years <i class="fas fa-caret-down"></i>
-      <div class="nav__menu" v-if="years.isOpen">
-        <div v-for="year in years.results" :key="year">
-          <button
-            class="nav__btn"
-            @click="
-              onClick('discover/movie?primary_release_year=' + year, year)
-            "
-          >
-            {{ year }}
-          </button>
-        </div>
-      </div>
     </button>
+    <div class="nav__menu" v-if="years.isOpen">
+      <div v-for="year in years.results" :key="year">
+        <button
+          class="nav__btn"
+          @click="onClick('discover/movie?primary_release_year=' + year, year)"
+        >
+          {{ year }}
+        </button>
+      </div>
+    </div>
   </nav>
 </template>
 
@@ -69,9 +65,14 @@ export default {
 
 <style lang="scss" scoped>
 .nav {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 3rem;
+
   &__btn {
     position: relative;
-    width: 15rem;
+    width: 100%rem;
     height: 6rem;
     font-size: 1.1rem;
     font-weight: 600;
@@ -93,13 +94,18 @@ export default {
   }
 
   &__menu {
-    position: absolute;
+    position: relative;
+    width: 100%;
+    padding-bottom: 1rem;
     background: $color-dark-two;
-    top: 100%;
-    z-index: 1;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 
     .nav__btn {
-      height: 3.5rem;
+      height: auto;
+      padding: 1rem;
+      font-size: 1rem;
     }
   }
 }
