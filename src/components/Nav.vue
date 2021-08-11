@@ -80,6 +80,7 @@ export default {
     background: transparent;
     color: darken($color-white, 15%);
     border: none;
+    cursor: pointer;
 
     &:hover {
       background: $color-dark-two;

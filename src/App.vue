@@ -30,11 +30,31 @@
   </header>
 
   <div class="container">
-    <h1 @click="test" v-if="movies.length !== 0">{{ title }}</h1>
-    <div class="movies">
+    <h1 v-if="movies.length !== 0">{{ title }}</h1>
+    <div class="movies flex-center-wrap">
       <h1 v-if="movies.length === 0">{{ errMessage }}</h1>
       <Movie :movies="movies" />
     </div>
+    <div class="pagination flex-center-center">
+      <span
+        class="page"
+        :class="currentPages === 5 ? 'disabled' : ''"
+        @click="prevPages"
+        >prev 10 pages</span
+      >
+      <Page
+        @btn-click="changePage"
+        :totalPages="totalPages"
+        :currentPages="currentPages"
+      />
+      <span
+        class="page"
+        :class="currentPages >= totalPages - 5 ? 'disabled' : ''"
+        @click="nextPages"
+        >next 10 pages</span
+      >
+    </div>
+
     <p class="copyright">
       <span>Designed and Developed by Ivan Petrović.</span> Copyright &copy;
       2021 5ramovies. All rights reserved.
@@ -45,12 +65,13 @@
 <script>
 import { API_KEY, BASE_URL } from './config.js';
 import Nav from './components/Nav.vue';
-import NavPhone from './components/Nav-phone.vue';
+import NavPhone from './components/NavPhone.vue';
 import Movie from './components/Movie.vue';
+import Page from './components/Page.vue';
 
 export default {
   name: 'App',
-  components: { Nav, NavPhone, Movie },
+  components: { Nav, NavPhone, Movie, Page },
   data() {
     return {
       mobileView: false,
@@ -60,6 +81,8 @@ export default {
       title: '',
       restUrl: '',
       movies: [],
+      totalPages: 0,
+      currentPages: 5,
       errMessage: 'There are no results that match your search'
     };
   },
@@ -68,13 +91,17 @@ export default {
     this.sortMovies('movie/popular?');
   },
   methods: {
-    ////////////////// START TEST /////////////////
-    test() {
-      console.log(this.restUrl);
-
-      this.sortMovies(this.restUrl + '&page=2', this.titleParam);
+    prevPages() {
+      if (this.currentPages === 5) return;
+      this.currentPages -= 10;
     },
-    ////////////////// END TEST /////////////////
+    nextPages() {
+      if (this.currentPages >= this.totalPages - 5) return;
+      this.currentPages += 10;
+    },
+    changePage(page) {
+      this.sortMovies(this.restUrl + `&page=${page}`, this.titleParam);
+    },
     handleView() {
       this.mobileView = window.innerWidth <= 800;
     },
@@ -99,7 +126,8 @@ export default {
         if (!res.ok) throw new Error(`${this.errMessage} (${res.status})`);
         const data = await res.json();
         this.movies = data.results.map(this.generateMovie);
-        // console.log(data);
+        this.totalPages = data.total_pages;
+        console.log(data);
         // console.log(this.movies);
       } catch (err) {
         console.log(err.message);
@@ -119,7 +147,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .header {
   position: fixed;
   top: 0;
@@ -151,12 +179,6 @@ export default {
   }
 }
 
-.movies {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
 .search {
   background: transparent;
   color: $color-white;
@@ -180,27 +202,27 @@ export default {
   }
 }
 
-h1 {
-  margin: 10rem 2rem 5rem;
-  font-size: 3rem;
-  letter-spacing: 1.5px;
+.pagination {
+  margin: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid darken($color-dark-one, 5%);
+  flex-wrap: wrap;
+}
 
-  @include respond(phone) {
-    text-align: center;
+.page {
+  padding: 1rem;
+  margin: 0.5rem;
+  background: darken($color-dark-one, 5%);
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    background: $color-dark-two;
   }
 }
 
-.copyright {
-  margin: 2rem;
-  text-align: center;
-  font-size: 1.2rem;
-  line-height: 2rem;
-  color: darken($color-white, 20%);
-
-  @include respond(phone) {
-    span {
-      display: block;
-    }
-  }
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 </style>

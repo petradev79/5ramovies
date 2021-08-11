@@ -18,3 +18,39 @@ html {
   max-width: 1200px;
   margin: 0 auto;
 }
+
+.flex-center-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-center-wrap {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+h1 {
+  margin: 10rem 2rem 5rem;
+  font-size: 3rem;
+  letter-spacing: 1.5px;
+
+  @include respond(phone) {
+    text-align: center;
+  }
+}
+
+.copyright {
+  margin: 2rem;
+  text-align: center;
+  font-size: 1.2rem;
+  line-height: 2rem;
+  color: darken($color-white, 20%);
+
+  @include respond(phone) {
+    span {
+      display: block;
+    }
+  }
+}

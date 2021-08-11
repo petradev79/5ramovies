@@ -107,7 +107,6 @@ export default {
     bottom: 0;
     background: $color-white;
     color: $color-gray;
-
     max-height: 100%;
     transform: translateY(100%);
     transition: transform 0.3s ease-in;

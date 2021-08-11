@@ -11,7 +11,7 @@
     <button class="nav__btn" @click="genres.isOpen = !genres.isOpen">
       genres <i class="fas fa-caret-down"></i>
     </button>
-    <div class="nav__menu" v-if="genres.isOpen">
+    <div class="nav__menu flex-center-wrap" v-if="genres.isOpen">
       <div v-for="genre in genres.results" :key="genre.id">
         <button
           class="nav__btn"
@@ -25,7 +25,7 @@
     <button class="nav__btn" @click="years.isOpen = !years.isOpen">
       years <i class="fas fa-caret-down"></i>
     </button>
-    <div class="nav__menu" v-if="years.isOpen">
+    <div class="nav__menu flex-center-wrap" v-if="years.isOpen">
       <div v-for="year in years.results" :key="year">
         <button
           class="nav__btn"
@@ -99,9 +99,6 @@ export default {
     width: 100%;
     padding-bottom: 1rem;
     background: $color-dark-two;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
 
     .nav__btn {
       height: auto;
