@@ -28,50 +28,24 @@
       v-if="!mobileView"
     />
   </header>
-
-  <div class="container">
-    <h1 v-if="movies.length !== 0">{{ title }}</h1>
-    <div class="movies flex-center-wrap">
-      <h1 v-if="movies.length === 0">{{ errMessage }}</h1>
-      <Movie :movies="movies" />
-    </div>
-    <div class="pagination flex-center-center">
-      <span
-        class="page"
-        :class="currentPages === 5 ? 'disabled' : ''"
-        @click="prevPages"
-        >prev 10 pages</span
-      >
-      <Page
-        @btn-click="changePage"
-        :totalPages="totalPages"
-        :currentPages="currentPages"
-      />
-      <span
-        class="page"
-        :class="currentPages >= totalPages - 5 ? 'disabled' : ''"
-        @click="nextPages"
-        >next 10 pages</span
-      >
-    </div>
-
-    <p class="copyright">
-      <span>Designed and Developed by Ivan Petrović.</span> Copyright &copy;
-      2021 5ramovies. All rights reserved.
-    </p>
-  </div>
+  <router-view
+    :movies="movies"
+    :totalPages="totalPages"
+    :currentPage="currentPage"
+    :title="title"
+    :errMessage="errMessage"
+    @changePage="changePage"
+  />
 </template>
 
 <script>
-import { API_KEY, BASE_URL } from './config.js';
+import { API_KEY, BASE_URL } from './config';
 import Nav from './components/Nav.vue';
 import NavPhone from './components/NavPhone.vue';
-import Movie from './components/Movie.vue';
-import Page from './components/Page.vue';
 
 export default {
   name: 'App',
-  components: { Nav, NavPhone, Movie, Page },
+  components: { Nav, NavPhone },
   data() {
     return {
       mobileView: false,
@@ -82,7 +56,7 @@ export default {
       restUrl: '',
       movies: [],
       totalPages: 0,
-      currentPages: 5,
+      currentPage: 1,
       errMessage: 'There are no results that match your search'
     };
   },
@@ -91,15 +65,8 @@ export default {
     this.sortMovies('movie/popular?');
   },
   methods: {
-    prevPages() {
-      if (this.currentPages === 5) return;
-      this.currentPages -= 10;
-    },
-    nextPages() {
-      if (this.currentPages >= this.totalPages - 5) return;
-      this.currentPages += 10;
-    },
     changePage(page) {
+      this.currentPage = page;
       this.sortMovies(this.restUrl + `&page=${page}`, this.titleParam);
     },
     handleView() {
@@ -200,29 +167,5 @@ export default {
   &::placeholder {
     color: $color-green;
   }
-}
-
-.pagination {
-  margin: 2rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid darken($color-dark-one, 5%);
-  flex-wrap: wrap;
-}
-
-.page {
-  padding: 1rem;
-  margin: 0.5rem;
-  background: darken($color-dark-one, 5%);
-  font-weight: 600;
-  cursor: pointer;
-
-  &:hover {
-    background: $color-dark-two;
-  }
-}
-
-.disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
 }
 </style>

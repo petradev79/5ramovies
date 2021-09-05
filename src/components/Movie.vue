@@ -1,5 +1,5 @@
 <template>
-  <div v-for="movie in movies" :key="movie.id">
+  <div v-for="movie in movies" :key="movie.id" @click="chooseMovie(movie)">
     <div class="movie">
       <img
         :src="
@@ -44,6 +44,9 @@ export default {
     };
   },
   methods: {
+    chooseMovie(movie) {
+      this.$router.push({ name: 'MovieDetails', params: { id: movie.id } });
+    },
     getRating(movie) {
       if (movie.rating >= 8) {
         return 'green';
