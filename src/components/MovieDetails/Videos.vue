@@ -45,6 +45,10 @@ export default {
   position: relative;
   display: inline-block;
 
+  @include respond(phone) {
+    margin: 2rem auto;
+  }
+
   &:hover .go {
     display: block;
     cursor: pointer;
@@ -75,5 +79,12 @@ export default {
 }
 .show {
   display: inline-block;
+}
+
+iframe {
+  @include respond(phone) {
+    width: 100%;
+    height: 200px;
+  }
 }
 </style>

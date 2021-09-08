@@ -84,6 +84,7 @@ export default {
           this.search.slice(1)}`;
       this.getMovies();
       this.search = '';
+      this.isOpen = false;
     },
     async getMovies() {
       try {
@@ -94,8 +95,6 @@ export default {
         const data = await res.json();
         this.movies = data.results.map(this.generateMovie);
         this.totalPages = data.total_pages;
-        console.log(data);
-        // console.log(this.movies);
       } catch (err) {
         console.log(err.message);
       }

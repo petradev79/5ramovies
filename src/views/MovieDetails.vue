@@ -1,12 +1,13 @@
 <template>
   <div class="container">
     <MainDetails :movie="movie" />
-    <div class="test">
+    <div class="main">
       <div class="poster">
         <img :src="movie.img" alt="movie.title" />
       </div>
       <Videos :movie="movie" />
     </div>
+    <MoreDetails :movie="movie" />
   </div>
 </template>
 
@@ -14,9 +15,10 @@
 import { API_KEY, BASE_URL } from '../config.js';
 import MainDetails from '../components/MovieDetails/MainDetails.vue';
 import Videos from '../components/MovieDetails/Videos.vue';
+import MoreDetails from '../components/MovieDetails/MoreDetails.vue';
 
 export default {
-  components: { MainDetails, Videos },
+  components: { MainDetails, Videos, MoreDetails },
   data() {
     return {
       id: this.$route.params.id,
@@ -32,15 +34,19 @@ export default {
         const res = await fetch(
           `${BASE_URL}movie/${this.id}?api_key=${API_KEY}&append_to_response=videos`
         );
-        if (!res.ok) throw new Error(`${this.errMessage} (${res.status})`);
+        const res2 = await fetch(
+          `${BASE_URL}movie/${this.id}/credits?api_key=${API_KEY}`
+        );
+        if (!res.ok || !res2.ok)
+          throw new Error(`${this.errMessage} (${res.status})`);
         const data = await res.json();
-        this.generateMovie(data);
-        console.log(data);
+        const credits = await res2.json();
+        this.generateMovie(data, credits);
       } catch (err) {
         console.log(err.message);
       }
     },
-    generateMovie(movie) {
+    generateMovie(movie, credits) {
       this.movie = {
         title: movie.title,
         date: movie.release_date?.split('-')[0],
@@ -58,7 +64,14 @@ export default {
         budget: movie.budget,
         revenue: movie.revenue,
         homepage: movie.homepage,
-        production: movie.production_companies.map(v => v.name)
+        production: movie.production_companies.map(v => v.name),
+        cast: credits.cast.map(a => {
+          const name = a.name;
+          const character = a.character;
+          const img = a.profile_path;
+
+          return { name, character, img };
+        })
       };
     }
   }
@@ -66,13 +79,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.test {
+.main {
   display: flex;
   justify-content: space-between;
+
+  @include respond(phone) {
+    flex-direction: column;
+  }
 }
 
 .poster {
   height: 485px;
+
+  @include respond(phone) {
+    margin: 0 auto;
+  }
 
   img {
     height: 100%;

@@ -57,6 +57,7 @@ export default {
   },
   methods: {
     onClick(url, titleParam) {
+      this.$router.push('/');
       this.$emit('btn-click', url, titleParam);
     }
   }

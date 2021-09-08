@@ -51,6 +51,12 @@ export default {
   justify-content: space-between;
   align-items: flex-end;
 
+  @include respond(phone) {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
   &__title {
     margin-bottom: 1rem;
     font-size: 3rem;
@@ -73,6 +79,10 @@ export default {
     display: flex;
     align-items: center;
     flex-direction: column;
+
+    @include respond(phone) {
+      margin: 1rem 1rem 0 1rem;
+    }
 
     h3 {
       margin-bottom: 1rem;
@@ -124,6 +134,12 @@ export default {
       font-weight: 600;
       letter-spacing: 1px;
       text-transform: uppercase;
+
+      @include respond(phone) {
+        margin-right: 0.5rem;
+        font-size: 1.1rem;
+        font-weight: 400;
+      }
     }
   }
 
@@ -131,6 +147,10 @@ export default {
     font-size: 1.4rem;
     letter-spacing: 1px;
     text-transform: uppercase;
+
+    @include respond(phone) {
+      display: none;
+    }
   }
 }
 </style>
