@@ -2,11 +2,14 @@
   <div class="container">
     <h1 v-if="movies.length !== 0">{{ title }}</h1>
     <div class="movies flex-center-wrap">
-      <h1 v-if="movies.length === 0">{{ errMessage }}</h1>
+      <div class="error-wrapper" v-if="movies.length === 0">
+        <h1>{{ errMessage }}</h1>
+      </div>
       <Movie :movies="movies" />
     </div>
 
     <Pagination
+      v-if="movies.length !== 0"
       :totalPages="totalPages"
       :currentPage="currentPage"
       @btn-click="changePage"
@@ -22,10 +25,11 @@
 <script>
 import Movie from '../components/Movie.vue';
 import Pagination from '../components/Pagination.vue';
+import Loader from '../components/Loader.vue';
 
 export default {
   name: 'App',
-  components: { Movie, Pagination },
+  components: { Movie, Pagination, Loader },
   props: ['movies', 'totalPages', 'currentPage', 'title', 'errMessage'],
   emits: ['chooseMovie'],
   methods: {

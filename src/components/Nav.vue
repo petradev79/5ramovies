@@ -8,7 +8,11 @@
       top rated
     </button>
 
-    <button class="nav__btn" @click="genres.isOpen = !genres.isOpen">
+    <button
+      class="nav__btn"
+      @click="genres.isOpen = !genres.isOpen"
+      v-click-away="onClickGenresAway"
+    >
       genres <i class="fas fa-caret-down"></i>
       <div class="nav__menu" v-if="genres.isOpen">
         <div v-for="genre in genres.results" :key="genre.id">
@@ -24,7 +28,11 @@
       </div>
     </button>
 
-    <button class="nav__btn" @click="years.isOpen = !years.isOpen">
+    <button
+      class="nav__btn"
+      @click="years.isOpen = !years.isOpen"
+      v-click-away="onClickYearsAway"
+    >
       years <i class="fas fa-caret-down"></i>
       <div class="nav__menu" v-if="years.isOpen">
         <div v-for="year in years.results" :key="year">
@@ -43,7 +51,11 @@
 </template>
 
 <script>
+import { directive } from 'vue3-click-away';
 export default {
+  directives: {
+    ClickAway: directive
+  },
   data() {
     return {
       // prettier-ignore
@@ -63,6 +75,12 @@ export default {
     onClick(url, titleParam) {
       this.$router.push('/');
       this.$emit('btn-click', url, titleParam);
+    },
+    onClickGenresAway() {
+      this.genres.isOpen = false;
+    },
+    onClickYearsAway() {
+      this.years.isOpen = false;
     }
   }
 };
@@ -79,29 +97,52 @@ export default {
     text-transform: uppercase;
     letter-spacing: 1.5px;
     background: transparent;
-    color: darken($color-white, 15%);
+    color: $color-white;
     border: none;
     cursor: pointer;
-
-    &:hover {
-      background: $color-dark-two;
-      color: $color-white;
-    }
 
     i {
       font-size: 1.4rem;
       margin-left: 0.3rem;
     }
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      background: $color-dark-two;
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 250ms ease-in;
+      z-index: -1;
+    }
+
+    &:hover::after {
+      transform: scaleY(1);
+    }
   }
 
   &__menu {
     position: absolute;
-    background: $color-dark-two;
+    background: darken($color-dark-one, 5%);
     top: 100%;
     z-index: 1;
 
     .nav__btn {
-      height: 3.5rem;
+      height: 3rem;
+
+      &::after {
+        transform: scaleX(0);
+        transform-origin: right;
+      }
+
+      &:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
     }
   }
 }
